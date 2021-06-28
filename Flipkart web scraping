@@ -1,0 +1,32 @@
+import time
+import requests
+from IPython.display import 
+clear_output
+from bs4 import BeautifulSoup
+importpandas as pd
+base_url='https://www.flipkart.com/search?q=macbook&sid=6bo%2Cb5g&as=on&as-show=on&otracker=AS_QueryStore_OrganicAutoSuggest_1_3_na_na_na&otracker1=AS_QueryStore_OrganicAutoSuggest_1_3_na_na_na&as-pos=1&as-type=RECENT&suggestionId=macbook%7CLaptops&requestId=34648a6f-70a8-4e47-8e2c-d21a9c650f3d&as-searchtext=mac'
+Na = []
+Am = []
+Ra = []
+Sp = []
+St = []
+for i in range(1,3):  
+time.sleep(3)
+print(f'Going to scrape data form {i} page')
+clear_output(wait=True)url=base_url+str(i)req = requests.get(url)soup= BeautifulSoup(req.text,'html')
+Name=soup.findAll('div',attrs={'class':'_4rR01T'})
+for j in Name:  Na.append(j.text)
+Amount=soup.findAll('div',attrs={'class':'_30jeq3 _1_WHN1'})
+for j in Amount:  Am.append(j.text)
+Rating=soup.findAll('span',attrs={'class':'_2_R_DZ'})
+for j in Rating:  Ra.append(j.span.span.text)
+Stars=soup.findAll('div',attrs={'class':'gUuXy-'})
+for j in Stars:  St.append(j.text)
+
+Spec=soup.findAll('div',attrs={'class':'fMghEO'})for j in Spec:  Sp.append(j.text)
+data=pd.DataFrame({'Proname':Na,
+'Proamount':Am,           
+'Prorating':Ra,           
+'Stars':St,
+'Prospec':Sp})data
+data.to_csv('FlipcartScrap.csv',index=False)
